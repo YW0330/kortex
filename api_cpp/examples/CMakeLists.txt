@@ -220,14 +220,25 @@ endif()
 
 # Create executable for each example
 # Look for examples under folders
-file(GLOB EXE_LIST RELATIVE ${PROJECT_SOURCE_DIR} "[0-9]*-*/[0-9]*.cpp")
-foreach ( SRC_FILE ${EXE_LIST} )
+if(NOT TARGET_DIR)
+  file(GLOB EXE_LIST RELATIVE ${PROJECT_SOURCE_DIR} "[0-9]*-*/[0-9]*.cpp")
+  foreach ( SRC_FILE ${EXE_LIST} )
 
-  string(REPLACE ".cpp" "" TARGET_EXE_NAME ${SRC_FILE})
-  string(REPLACE "/" "_" TARGET_EXE_NAME ${TARGET_EXE_NAME})
-  
-  MESSAGE("creating TARGET_EXE_NAME: '${TARGET_EXE_NAME}'")
+    string(REPLACE ".cpp" "" TARGET_EXE_NAME ${SRC_FILE})
+    string(REPLACE "/" "_" TARGET_EXE_NAME ${TARGET_EXE_NAME})
+    
+    MESSAGE("creating TARGET_EXE_NAME: '${TARGET_EXE_NAME}'")
 
-  add_executable(${TARGET_EXE_NAME} ${SRC_FILE} utilities.cpp)
-  
-endforeach()
+    add_executable(${TARGET_EXE_NAME} ${SRC_FILE} utilities.cpp)
+    
+  endforeach()
+else()
+  file(GLOB EXE_LIST RELATIVE ${PROJECT_SOURCE_DIR} ./${TARGET_DIR}/*.cpp)
+  foreach ( SRC_FILE ${EXE_LIST} )
+    string(REPLACE ".cpp" "" TARGET_EXE_NAME ${SRC_FILE})
+    string(REPLACE "/" "_" TARGET_EXE_NAME ${TARGET_EXE_NAME})
+    MESSAGE("creating TARGET_EXE_NAME: '${TARGET_EXE_NAME}'")
+    add_executable(${TARGET_EXE_NAME} ${SRC_FILE} utilities.cpp)
+  endforeach()
+endif()
+
